@@ -1,11 +1,21 @@
-import { Button } from '@/components/ui/button';
+import { createBrowserRouter, RouterProvider} from "react-router-dom"
+import NotFound from "@/pages/NotFound";
+import Home from "./pages/Home";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+]);
 
 function App() {
   return (
-    <div className='flex flex-col justify-center items-center gap-7 h-screen'>
-      <div className='text-3xl font-bold'>Hello world</div>
-      <Button>Shadnc/ui</Button>
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

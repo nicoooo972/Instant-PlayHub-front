@@ -1,8 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import axios, { AxiosError } from 'axios';
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -11,9 +12,9 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Link, useNavigate } from "react-router-dom"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Link, useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
     username: z.string().min(1, {
@@ -38,6 +39,9 @@ const formSchema = z.object({
 })
 
 export const RegistrationForm = () => {
+    const {
+        setError
+    } = useForm();
     const navigate = useNavigate();
 
     // 1. Define your form.
@@ -53,22 +57,26 @@ export const RegistrationForm = () => {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`, values);
 
-            if (response.ok) {
-                navigate("/connexion");
+            if (response.status === 200) {
+                navigate("/login");
             } else {
-                const errorData = await response.json();
-                console.error("Erreur lors de l'inscription :", errorData);
+                console.error("Erreur lors de l'inscription :", response.data);
             }
-        } catch (error) {
-            console.error("Erreur lors de la requête d'inscription :", error);
+        } catch (err) {
+            console.log("oci")
+            if (err instanceof AxiosError){
+                console.error("Erreur lors de la requête d'inscription :", err);
+                console.log("ici    ")
+                if (err.response?.data?.error_email) {
+                    console.log('icic');
+                    const errorMessage = err.response.data.error_email as string;
+                    console.log(errorMessage)
+                    form.setError('email', { type: 'server', message: errorMessage });
+                }
+            }
+            
         }
     }
 
@@ -122,7 +130,7 @@ export const RegistrationForm = () => {
                         />
                         <Button className="w-full" type="submit">S'inscrire</Button>
                         <FormDescription className="text-white text-center">
-                            Je suis déjà inscrit ? <Link className="underline" to={"/connexion"}>Je me connecte</Link>
+                            Je suis déjà inscrit ? <Link className="underline" to={"/login"}>Je me connecte</Link>
                         </FormDescription>
                     </form>
                 </Form>

@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "@/provider/authProvider"
+import axios from 'axios';
 
 const formSchema = z.object({
     email: z.string().min(1, {
@@ -28,6 +30,7 @@ const formSchema = z.object({
 
 export default function LoginForm() {
     const navigate = useNavigate();
+    const { setToken } = useAuth(); 
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
@@ -41,19 +44,13 @@ export default function LoginForm() {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
-
-            if (response.ok) {
-                navigate("/");
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, values);
+    
+            if (response.status === 200) {
+                setToken(response.data.access_token);
+                navigate("/")
             } else {
-                const errorData = await response.json();
-                console.error("Erreur lors de le la connexion :", errorData);
+                console.error("Erreur lors de la connexion :", response.data);
             }
         } catch (error) {
             console.error("Erreur lors de la requête de connexion :", error);
@@ -97,8 +94,8 @@ export default function LoginForm() {
                         />
                         <Button className="w-full" type="submit">Se connecter</Button>
                         <FormDescription className="text-white text-center flex justify-between">
-                            <span><Link className="underline" to={"/inscription"}>Je n'ai pas de compte </Link></span>
-                            <span><Link className="underline" to={"/connexion"}>Mot de passe oublié</Link></span>
+                            <span><Link className="underline" to={"/register"}>Je n'ai pas de compte </Link></span>
+                            <span><Link className="underline" to={"/login"}>Mot de passe oublié</Link></span>
                         </FormDescription>
                     </form>
                 </Form>

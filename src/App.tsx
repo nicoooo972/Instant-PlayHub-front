@@ -1,31 +1,11 @@
-import { createBrowserRouter, RouterProvider} from "react-router-dom"
-import NotFound from "@/pages/NotFound";
-import Home from "./pages/Home";
-import { RegistrationPage } from "./pages/RegistrationPage";
-import {LoginPage} from "./pages/LoginPage";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/inscription",
-    element: <RegistrationPage />,
-  },
-  {
-    path: "/connexion",
-    element: <LoginPage />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
+import AuthProvider from "./provider/authProvider";
+import Routes from "./routes/routes";
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
 

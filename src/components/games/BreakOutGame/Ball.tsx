@@ -1,96 +1,207 @@
-// import { canvas, context } from "./canvas";
-// import { drawCircle, circleCollideWithRectangle } from "./functions";
-// import { Player } from "./Player";
-// import { RenderBlocks } from "./RenderBlocks";
+import { useEffect, useState } from "react";
+import { canvas, context } from "./canvas";
+import { drawCircle, circleCollideWithRectangle } from "./functions";
+import RenderPlayer from "./Player";
+import RenderBlocks from "./RenderBlocks";
 
-// export const ball = {
-//     x : canvas?.width ? canvas.width / 2 : 0,
-//     y : canvas?.height ? canvas.height - 50 : 0,
-//     size : 10,
-//     color : "#3f37c9",
-//     speed : 4,
-//     speedX : 4,
-//     speedY : -4
+// const initialBallState = {
+//   x: canvas?.width ? canvas.width / 2 : 0,
+//   y: canvas?.height ? canvas.height - 50 : 0,
+//   size: 10,
+//   color: "#3f37c9",
+//   speed: 4,
+//   speedX: 4,
+//   speedY: -4,
 // };
 
-// const blocks = RenderBlocks();
+export default function RenderBall() {
+  const blocks = RenderBlocks();
+  const Player = RenderPlayer();
 
-// export function UpdateBall(){
-//     //Déplacement de la balle
-//     ball.x += ball.speedX;
-//     ball.y += ball.speedY;
+  const [placeBall, setPlaceBall] = useState(true)
+  const [ball, setBall] = useState({
+    x: 0,
+    y: 0,
+    size: 10,
+    color: "#3f37c9",
+    speed: 4,
+    speedX: 4,
+    speedY: -4,
+  });
 
-//     // Si la balle touche l'écran DROIT
-//     if(canvas){
-//         if (ball.x + ball.size > canvas.width ) {
-//             ball.speedX *= -1;
-//         }
-//     }
+  drawCircle(ball.color, ball.x, ball.y, ball.size, true, 1);
 
-//     // Si la balle touche l'écran GAUCHE
-//     if (ball.x - ball.size < 0){
-//         ball.speedX *= -1;
-//     }
+  useEffect(() => {
 
-//     // Si la balle touche l'écran HAUT
-//     if (ball.y - ball.size < 0){
-//         ball.speedY *= -1;
-//     }
+    if(placeBall){
+        if (canvas) {
+          setBall((prevBall) => ({
+            ...prevBall,
+            x: canvas?.width ? canvas.width / 2 : 0,
+            y: canvas?.height ? canvas.height - 50 : 0,
+          }));
+        }
+        setPlaceBall(false);
+    }
 
-//     // Si la balle touche le player
-//     if (ball.x > Player.x  && ball.x < Player.x + Player.width && ball.y + ball.size > Player.y && ball.y + ball.size < Player.y + ball.speedY + 1) {
-//         ball.speedY *= -1;
-
-//         //Calcul de l'angle de rebond de la balle
-//         let d = (ball.x - Player.x) / Player.width; // une valeur normalisée entre 0 et 1 de la balle sur le player
-//         let d2 = (d - 0.5) * 2; // valeir normalisée entre -1 et 1
-//         ball.speedX = d2 * ball.speed;
+    const interval = setInterval(() => {
         
-//     }
+      setBall((prevBall) => ({
+        ...prevBall,
+        x: prevBall.x + prevBall.speedX,
+        y: prevBall.y + prevBall.speedY,
+      }));
 
-//     //Si la balle touche un block 
-//     //Parcourir tous les blocks pour les comparer avec la position de la balle
-//     for (let i = 0; i < blocks.length; i++){
-//         let block = blocks[i];
+    //   if(canvas){
+    //       if(ball.x + ball.size > canvas.width){
+    //         setBall((prevBall) => ({
+    //             ...prevBall,
+    //             speedX: prevBall.speedX * -1
+    //           }));
+    //       } else {
+    //         setBall((prevBall) => ({
+    //             ...prevBall,
+    //             x: prevBall.x + prevBall.speedX,
+    //             y: prevBall.y + prevBall.speedY,
+    //           }));
+    //       }
 
-        
-//         //Est-ce qu'on détecte une collision ?
-//         if (circleCollideWithRectangle(ball, block)){
-//             let blockTop = block.y;
-//             let blockLeft = block.x;
-//             let blockRight = block.x + block.width;
-//             let blockBottom = block.y + block.height;
+    //   }
+      
+
     
-//             let ballMovesUp = ball.speedY < 0;
-//             let ballMovesDown = ball.speedY > 0;
 
-//             //Vérifie où se toruve la balle par rapport au block au moment de la collision
-//             if (ball.x < blockLeft && ball.y > blockTop && ball.y < blockBottom)        ball.speedX *= -1 //gauche
-//             else if (ball.x > blockRight && ball.y > blockTop && ball.y < blockBottom)  ball.speedX *= -1 //droite
-//             else if (ball.y < blockTop && ball.x > blockLeft && ball.x < blockRight)    ball.speedY *= -1 //haut
-//             else if (ball.y > blockBottom && ball.x > blockLeft && ball.x < blockRight) ball.speedY *= -1 //bas
-//             // Si on arrive ici, c'est qu'on a une collision sur un coin
-//             else if (
-//                 ball.x > blockRight && ball.y > blockBottom || // coin bas droite
-//                 ball.x < blockLeft && ball.y > blockBottom || // coin bas gauche
-//                 ball.x > blockLeft && ball.y > blockTop || // coin haut gauche
-//                 ball.x > blockRight && ball.y < blockTop // coin haut droite
-//             ) {
-//                 if (ballMovesDown)  ball.speedY *= -1;
-//                 if (ballMovesUp)    ball.speedX *= -1;
-//             }
-            
-//             blocks.splice(i, 1);
-//             i--;
-//         }
+    //   // Si la balle touche l'écran HAUT
+    //   if (ball.y - ball.size < 0) {
+    //     setBall((prevBall) => ({ ...prevBall, speedY: prevBall.speedY * -1 }));
+    //   }
+
+    //   // Si la balle touche le player
+    //   if (
+    //     ball.x > Player.x &&
+    //     ball.x < Player.x + Player.width &&
+    //     ball.y + ball.size > Player.y &&
+    //     ball.y + ball.size < Player.y + ball.speedY + 1
+    //   ) {
+    //     setBall((prevBall) => ({ ...prevBall, speedY: prevBall.speedY * -1 }));
+
+    //     //Calcul de l'angle de rebond de la balle
+    //     let d = (ball.x - Player.x) / Player.width; // une valeur normalisée entre 0 et 1 de la balle sur le player
+    //     let d2 = (d - 0.5) * 2; // valeir normalisée entre -1 et 1
+    //     setBall((prevBall) => ({ ...prevBall, speedX: d2 * ball.speed }));
+    //   }
+
+    //   //Si la balle touche un block
+    //   //Parcourir tous les blocks pour les comparer avec la position de la balle
+    //   for (let i = 0; i < blocks.length; i++) {
+    //     let block = blocks[i];
+
+    //     //Est-ce qu'on détecte une collision ?
+    //     if (circleCollideWithRectangle(ball, block)) {
+    //       let blockTop = block.y;
+    //       let blockLeft = block.x;
+    //       let blockRight = block.x + block.width;
+    //       let blockBottom = block.y + block.height;
+
+    //       let ballMovesUp = ball.speedY < 0;
+    //       let ballMovesDown = ball.speedY > 0;
+
+    //       //Vérifie où se trouve la balle par rapport au block au moment de la collision
+    //       if (ball.x < blockLeft && ball.y > blockTop && ball.y < blockBottom)
+    //         setBall((prevBall) => ({
+    //           ...prevBall,
+    //           speedX: prevBall.speedX * -1,
+    //         }));
+    //       //gauche
+    //       else if (
+    //         ball.x > blockRight &&
+    //         ball.y > blockTop &&
+    //         ball.y < blockBottom
+    //       )
+    //         setBall((prevBall) => ({
+    //           ...prevBall,
+    //           speedX: prevBall.speedX * -1,
+    //         }));
+    //       //droite
+    //       else if (
+    //         ball.y < blockTop &&
+    //         ball.x > blockLeft &&
+    //         ball.x < blockRight
+    //       )
+    //         setBall((prevBall) => ({
+    //           ...prevBall,
+    //           speedY: prevBall.speedY * -1,
+    //         }));
+    //       //haut
+    //       else if (
+    //         ball.y > blockBottom &&
+    //         ball.x > blockLeft &&
+    //         ball.x < blockRight
+    //       )
+    //         setBall((prevBall) => ({
+    //           ...prevBall,
+    //           speedY: prevBall.speedY * -1,
+    //         }));
+    //       //bas
+    //       // Si on arrive ici, c'est qu'on a une collision sur un coin
+    //       else if (
+    //         (ball.x > blockRight && ball.y > blockBottom) || // coin bas droite
+    //         (ball.x < blockLeft && ball.y > blockBottom) || // coin bas gauche
+    //         (ball.x > blockLeft && ball.y > blockTop) || // coin haut gauche
+    //         (ball.x > blockRight && ball.y < blockTop) // coin haut droite
+    //       ) {
+    //         if (ballMovesDown)
+    //           setBall((prevBall) => ({
+    //             ...prevBall,
+    //             speedY: prevBall.speedY * -1,
+    //           }));
+    //         if (ballMovesUp)
+    //           setBall((prevBall) => ({
+    //             ...prevBall,
+    //             speedX: prevBall.speedX * -1,
+    //           }));
+    //       }
+
+    //       blocks.splice(i, 1);
+    //       i--;
+    //     }
+    //   }
+      //Clearing the interval
+      return () => clearInterval(interval);
+    }, 100);
+  }, []);
 
 
+  if (canvas) {
+    // Si la balle touche l'écran DROIT
+    if (ball.x + ball.size > canvas.width) {
+      setBall((prevBall) => ({
+        ...prevBall,
+        speedX: prevBall.speedX * -1,
+        x : prevBall.x - prevBall.size,
+        y : prevBall.y - prevBall.size
+      }));
+    };
 
-//     }
-// };
+    // Si la balle touche l'écran GAUCHE
+    
+    if (ball.x - ball.size < 0 && ball.x != 0) {
+      setBall((prevBall) => ({
+        ...prevBall,
+        speedX: prevBall.speedX * -1
+      }));
+    };
+  }
+
+    // Si la balle touche l'écran HAUT
+      if (ball.y - ball.size < 0 && ball.y != 0) {
+        setBall((prevBall) => ({ 
+            ...prevBall, 
+            speedY: prevBall.speedY * -1,
+            x : prevBall.x - prevBall.size,
+            y : prevBall.y - prevBall.size
+        }));
+      }
 
 
-// export function RenderBall(){
-//     drawCircle(ball.color, ball.x, ball.y, ball.size, true, 1)
-// };
-export {}
+}

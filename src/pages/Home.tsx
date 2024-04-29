@@ -2,7 +2,7 @@
 import React from 'react';
 import Layout from '@/components/layout/Layout'; // Import Layout component
 import { Button } from '@/components/ui/button';
-import BreakoutGame from '@/components/games/BreakoutGame';
+import BreakoutGame from '@/components/games/BreakOutGame/BreakoutGame';
 
 const Home = () => {
      

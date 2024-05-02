@@ -12,7 +12,7 @@ export default function RenderPlayer() {
     width: PLAYER_WIDTH,
     height: PLAYER_HEIGHT,
     color: "#7209b7",
-    speed: 5,
+    speed: 18,
   });
 
   useEffect(() => {
@@ -47,8 +47,6 @@ export default function RenderPlayer() {
   }, [canvas, keyboard]);
 
   if (player.x < 0) {
-    console.log("on dépasse l'écran gauche");
-    
     setPlayer((prevPlayer) => ({
       ...prevPlayer,
       x: 0,
@@ -57,7 +55,6 @@ export default function RenderPlayer() {
 
   if (canvas) {
     if (player.x > canvas.width - player.width) {
-      console.log("on dépasse l'écran droit");
       setPlayer((prevPlayer) => ({
         ...prevPlayer,
         x: canvas?.width ? canvas.width - prevPlayer.width : 0,

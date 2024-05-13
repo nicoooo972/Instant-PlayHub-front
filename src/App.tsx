@@ -1,21 +1,11 @@
-import { createBrowserRouter, RouterProvider} from "react-router-dom"
-import NotFound from "@/pages/NotFound";
-import Home from "./pages/Home";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
+import AuthProvider from "./provider/authProvider";
+import Routes from "./routes/routes";
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
 

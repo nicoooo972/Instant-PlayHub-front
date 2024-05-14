@@ -1,3 +1,6 @@
+
+import React from 'react';
+import Layout from '@/components/layout/Layout'; // Import Layout component
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/provider/authProvider';
 import { Link } from 'react-router-dom';
@@ -5,9 +8,11 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     const { token } = useAuth();
     return (
-        <div>
-            <h1>Home 🏠</h1>
-            <Link to={"/games"}>
+        <Layout> 
+            <div>
+                <h1>Home 🏠</h1>
+                <Button>Shadnc/ui</Button>
+                <Link to={"/games"}>
                 <Button>Voir la liste des jeux</Button>
             </Link>
             {token && (
@@ -15,7 +20,9 @@ const Home = () => {
                     <Button>Déconnexion</Button>
                 </Link>
             )}
-        </div>
-    )
+            </div>
+        </Layout>
+    );
 }
-export default Home
+
+export default Home;

@@ -1,7 +1,6 @@
-import { DragHandleDots2Icon } from "@radix-ui/react-icons"
-import * as ResizablePrimitive from "react-resizable-panels"
-
-import { cn } from "@/lib/utils"
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import * as ResizablePrimitive from "react-resizable-panels";
+import { cn } from "@/lib/utils";
 
 const ResizablePanelGroup = ({
   className,
@@ -14,16 +13,20 @@ const ResizablePanelGroup = ({
     )}
     {...props}
   />
-)
+);
 
-const ResizablePanel = ResizablePrimitive.Panel
+const ResizablePanel = ResizablePrimitive.Panel;
 
 const ResizableHandle = ({
   withHandle,
+  isCollapsed,
+  onToggle,
   className,
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
-  withHandle?: boolean
+  withHandle?: boolean;
+  isCollapsed?: boolean;
+  onToggle?: () => void;
 }) => (
   <ResizablePrimitive.PanelResizeHandle
     className={cn(
@@ -33,11 +36,18 @@ const ResizableHandle = ({
     {...props}
   >
     {withHandle && (
-      <div className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border">
-        <DragHandleDots2Icon className="h-2.5 w-2.5" />
+      <div
+        className="z-10 flex h-6 w-6 items-center justify-center rounded-md border bg-primary hover:bg-primary/90 text-white cursor-pointer"
+        onClick={onToggle}
+      >
+        {isCollapsed ? (
+          <ChevronRightIcon className="h-4 w-4" />
+        ) : (
+          <ChevronLeftIcon className="h-4 w-4" />
+        )}
       </div>
     )}
   </ResizablePrimitive.PanelResizeHandle>
-)
+);
 
-export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle };

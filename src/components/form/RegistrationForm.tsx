@@ -18,23 +18,23 @@ import { Link, useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
     username: z.string().min(1, {
-        message: "Le pseudo est obligatoire.",
+        message: "Username is required",
     }).min(4, {
-        message: "Le pseudo doit comporter au moins 4 caractères.",
+        message: "Username must be at least 4 characters long",
     }),
     email: z.string().min(1, {
-        message: "L'e-mail est obligatoire.",
+        message: "Email is required",
     }).email({
-        message: "L'e-mail doit être valide.",
+        message: "Email is not valid",
     }),
     password: z.string().min(1, {
-        message: "Le mot de passe est obligatoire.",
+        message: "Password is required",
     }).refine(value => {
         // Règles du mot de passe : au moins 8 caractères, une majuscule, un chiffre et un caractère spécial
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$/;
         return passwordRegex.test(value);
     }, {
-        message: "Le mot de passe doit avoir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial.",
+        message: "Password must have at least 8 characters, an uppercase letter, a number and a special character.",
     }),
 })
 
@@ -66,7 +66,7 @@ export const RegistrationForm = () => {
             }
         } catch (err) {
             console.log("oci")
-            if (err instanceof AxiosError){
+            if (err instanceof AxiosError) {
                 console.error("Erreur lors de la requête d'inscription :", err);
                 console.log("ici    ")
                 if (err.response?.data?.error_email) {
@@ -76,65 +76,60 @@ export const RegistrationForm = () => {
                     form.setError('email', { type: 'server', message: errorMessage });
                 }
             }
-            
+
         }
     }
 
     return (
-        <div className="bg-black h-screen flex flex-col justify-center items-center">
-            <div className="bg-gray rounded-md p-6 w-96">
-
-                <h1 className="text-2xl text-purple text-center mb-5">
-                    Inscription
-                </h1>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Pseudo *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="MonSuperbePseudo" type="text" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Email *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="examle@gmail.com" type="email" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Mot de passe *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="********" type="password" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button className="w-full" type="submit">S'inscrire</Button>
-                        <FormDescription className="text-white text-center">
-                            Je suis déjà inscrit ? <Link className="underline" to={"/login"}>Je me connecte</Link>
-                        </FormDescription>
-                    </form>
-                </Form>
-            </div>
-        </div>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Pseudo *</FormLabel>
+                            <FormControl>
+                                <Input placeholder="MonSuperbePseudo" type="text" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email *</FormLabel>
+                            <FormControl>
+                                <Input placeholder="examle@gmail.com" type="email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Password *</FormLabel>
+                            <FormControl>
+                                <Input placeholder="********" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button className="w-full" type="submit">Create an account</Button>
+                <div className="mt-6 text-center text-sm">
+                    Already have an account?{" "}
+                    <Link to="/login" className="underline">
+                        Sign in
+                    </Link>
+                </div>
+            </form>
+        </Form>
     )
 }

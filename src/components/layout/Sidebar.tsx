@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import MenuLink from "../menuLink";
 import { FaCog, FaComments, FaHashtag, FaHome, FaUser, FaUsers } from "react-icons/fa";
 import { useAuth } from '@/provider/authProvider'; // Import the useAuth hook
+import { Link } from "react-router-dom";
 
 interface SidebarProps {
     isCollapsed: boolean
@@ -116,9 +117,11 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                         </div>
                     </>
                 ) : (
-                    <Button variant="outline" className="w-full text-left">
-                        Login
-                    </Button>
+                    <Link to={"/login"} className="w-full">
+                        <Button variant="outline" className="w-full">
+                            Login
+                        </Button>
+                    </Link>
                 )}
             </div>
             {menuItems.map((category) => (

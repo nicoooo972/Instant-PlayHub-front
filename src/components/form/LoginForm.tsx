@@ -19,18 +19,18 @@ import axios from 'axios';
 
 const formSchema = z.object({
     email: z.string().min(1, {
-        message: "L'e-mail est obligatoire.",
+        message: "Email is required",
     }).email({
-        message: "L'e-mail doit être valide.",
+        message: "Email is not valid",
     }),
     password: z.string().min(1, {
-        message: "Le mot de passe est obligatoire.",
+        message: "Password is required",
     })
 })
 
 export default function LoginForm() {
     const navigate = useNavigate();
-    const { setToken } = useAuth(); 
+    const { setToken } = useAuth();
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
@@ -45,7 +45,7 @@ export default function LoginForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, values);
-    
+
             if (response.status === 200) {
                 setToken(response.data.access_token);
                 navigate("/")
@@ -58,48 +58,50 @@ export default function LoginForm() {
     }
 
     return (
-        <div className="bg-black h-screen flex flex-col justify-center items-center">
-            <div className="bg-gray rounded-md p-6 min-w-96">
-
-                <h1 className="text-2xl text-purple text-center mb-5">
-                    Connexion
-                </h1>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Email *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="examle@gmail.com" type="email" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-white">Mot de passe *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="********" type="password" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button className="w-full" type="submit">Se connecter</Button>
-                        <FormDescription className="text-white text-center flex justify-between">
-                            <span><Link className="underline" to={"/register"}>Je n'ai pas de compte </Link></span>
-                            <span><Link className="underline" to={"/login"}>Mot de passe oublié</Link></span>
-                        </FormDescription>
-                    </form>
-                </Form>
-            </div>
-        </div>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email *</FormLabel>
+                            <FormControl>
+                                <Input placeholder="myemail@example.com" type="email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <div className="flex items-center">
+                                <FormLabel>Password *</FormLabel>
+                                <Link
+                                    to="/forgot-password"
+                                    className="ml-auto inline-block text-sm underline"
+                                >
+                                    Forgot your password?
+                                </Link>
+                            </div>
+                            <FormControl>
+                                <Input placeholder="********" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button className="w-full" type="submit">Se connecter</Button>
+                <div className="mt-6 text-center text-sm">
+                    Don&apos;t have an account?{" "}
+                    <Link to="/register" className="underline">
+                        Sign up
+                    </Link>
+                </div>
+            </form>
+        </Form>
     )
 }

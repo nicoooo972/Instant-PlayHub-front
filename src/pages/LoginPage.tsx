@@ -3,7 +3,7 @@ import LoginForm from "@/components/form/LoginForm"
 export function LoginPage() {
     return (
         <div className="w-full lg:grid lg:grid-cols-2 min-h-screen">
-            <div className="flex items-center justify-center py-12">
+            <div className="flex items-center justify-center py-12 px-4 sm:px-0">
                 <div className="mx-auto grid w-[350px] gap-6">
                     <div className="grid gap-2 text-center">
                         <h1 className="text-3xl font-bold">Sign In</h1>
